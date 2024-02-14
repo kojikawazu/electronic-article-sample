@@ -1,29 +1,25 @@
-import Book from "./components/Book";
-import { getAllBooks } from "./lib/microcms/client";
-import { BookType, Purchase, User } from "./types/types";
 import { getServerSession } from "next-auth";
+import { getAllBooks } from "./lib/microcms/client";
 import { nextAuthOptions } from "./lib/next-auth/options";
+import { BookType, Purchase, User } from "./types/types";
+import Book from "./components/Book";
 
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
-  const { contents } = await getAllBooks();
   const session = await getServerSession(nextAuthOptions);
   const user: User = session?.user as User;
 
-  let purchaseBookIds: any;
+  const { contents } = await getAllBooks();
 
-  if (user) {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user?.id}`,
-      { cache: "no-store" } // SSR
-    );
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user?.id}`,
+    { cache: "no-store" } // SSR
+  );
 
-    const purchasesData = await response.json();
-
-    purchaseBookIds = purchasesData.map(
-      (purchaseBook: Purchase) => purchaseBook.bookId
-    );
-  }
+  const purchasesData = await response.json();
+  const purchaseBookIds = purchasesData.map(
+    (purchaseBook: Purchase) => purchaseBook.bookId
+  );
 
   return (
     <>
@@ -35,9 +31,10 @@ export default async function Home() {
           <Book
             key={book.id}
             book={book}
+            user={user}
             isPurchased={purchaseBookIds.includes(book.id)} />
         ))}
       </main>
     </>
   );
-}
+};
