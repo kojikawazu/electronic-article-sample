@@ -11,19 +11,17 @@ export default async function ProfilePage() {
 
     let purchasesDetailBooks: BookType[] = [];
 
-    if (user) {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
-            { cache: "no-store" } // SSR
-        );
-        const purchasesData = await response.json();
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
+        { cache: "no-store" } // SSR
+    );
+    const purchasesData = await response.json();
 
-        purchasesDetailBooks = await Promise.all(
-            purchasesData.map(async (purchase: Purchase) => {
-                return await getDetailBook(purchase.bookId);
-            })
-        );
-    }
+    purchasesDetailBooks = await Promise.all(
+        purchasesData.map(async (purchase: Purchase) => {
+            return await getDetailBook(purchase.bookId);
+        })
+    );
 
     return (
         <div className="container mx-auto p-4">
