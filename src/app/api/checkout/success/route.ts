@@ -1,10 +1,16 @@
-import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import prisma from "@/app/lib/prisma";
 
+// stripeインスタンス
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-// 購入履歴の保存
+/**
+ * prismaへ購入履歴を保存
+ * @param request 
+ * @param response 
+ * @returns 
+ */
 export async function POST(request: Request, response: Response) {
     const { sessionId } = await request.json();
 

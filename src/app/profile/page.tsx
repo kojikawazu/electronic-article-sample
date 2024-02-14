@@ -5,19 +5,26 @@ import { BookType, Purchase, User } from "../types/types";
 import { getDetailBook } from "../lib/microcms/client";
 import PurchaseDetailBook from "../components/PurchaseDetailBook";
 
+/**
+ * プロフィールページ
+ * @returns JSX
+ */
 export default async function ProfilePage() {
+
+    // サーバーサイドのコンテキストでセッション情報を取得するために使用
     const session = await getServerSession(nextAuthOptions);
+    // ユーザーセッションの取得
     const user: User = session?.user as User;
 
-    let purchasesDetailBooks: BookType[] = [];
-
+    // Next.js API Router(Prisma)
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
         { cache: "no-store" } // SSR
     );
     const purchasesData = await response.json();
 
-    purchasesDetailBooks = await Promise.all(
+    // microCMS(ヘッドレスCMS)(特定の書籍データの取得)
+    const purchasesDetailBooks: BookType[] = await Promise.all(
         purchasesData.map(async (purchase: Purchase) => {
             return await getDetailBook(purchase.bookId);
         })

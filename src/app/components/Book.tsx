@@ -1,8 +1,8 @@
 "use client";
+// useStateを使っているので、クライアントコンポーネント
 
 import { useState } from "react";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { BookType, User } from "../types/types";
 
@@ -12,11 +12,17 @@ type BookProps = {
   user: User;
 };
 
+/**
+ * Bookコンポーネント
+ * @param param0 
+ * @returns JSX
+ */
 // eslint-disable-next-line react/display-name
 const Book = ({ book, isPurchased, user }: BookProps) => {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
+  // stripeのチェックアウト
   const startCheckout = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
@@ -27,7 +33,7 @@ const Book = ({ book, isPurchased, user }: BookProps) => {
           price: book.price,
           userId: user?.id,
           bookId: book.id,
-        })
+        }),
       });
 
       const responseData = await response.json();
@@ -39,6 +45,7 @@ const Book = ({ book, isPurchased, user }: BookProps) => {
     }
   };
 
+  // 購入へハンドラー
   const handlePurchaseClick = () => {
     if (isPurchased) {
       alert("その商品は購入済です");
@@ -46,9 +53,11 @@ const Book = ({ book, isPurchased, user }: BookProps) => {
       setShowModal(true);
     }
   }
+  // キャンセルハンドラー
   const handleCancel = () => {
     setShowModal(false);
   }
+  // 購入ボタンハンドラー
   const handlePurchaseConfirm = () => {
     if (!user) {
       setShowModal(false);

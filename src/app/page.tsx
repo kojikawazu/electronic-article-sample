@@ -4,18 +4,26 @@ import { nextAuthOptions } from "./lib/next-auth/options";
 import { BookType, Purchase, User } from "./types/types";
 import Book from "./components/Book";
 
+/**
+ * ホームページ
+ * @returns JSX
+ */
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
+
+  // サーバーサイドのコンテキストでセッション情報を取得するために使用
   const session = await getServerSession(nextAuthOptions);
+  // ユーザーセッションの取得
   const user: User = session?.user as User;
 
+  // microCMS(ヘッドレスCMS)から書籍データを取得する
   const { contents } = await getAllBooks();
 
+  // Next.js API Router(Prisma)
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user?.id}`,
     { cache: "no-store" } // SSR
   );
-
   const purchasesData = await response.json();
   const purchaseBookIds = purchasesData.map(
     (purchaseBook: Purchase) => purchaseBook.bookId

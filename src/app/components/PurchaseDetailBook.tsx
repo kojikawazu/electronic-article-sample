@@ -9,6 +9,11 @@ type purchaseDetailBookProps = {
     purchaseDetailBook: BookType;
 }
 
+/**
+ * 購入詳細ブックコンポーネント
+ * @param param0 
+ * @returns JSX
+ */
 const PurchaseDetailBook = ({
     purchaseDetailBook
 }: purchaseDetailBookProps) => {
