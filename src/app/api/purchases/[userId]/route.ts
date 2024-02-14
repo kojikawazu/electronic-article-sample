@@ -1,6 +1,12 @@
-import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
+import prisma from "@/app/lib/prisma";
 
+/**
+ * prismaからpurchase取得[GET]
+ * @param request 
+ * @param params userId
+ * @returns JSON
+ */
 export async function GET(
     request: Request,
     { params }: { params: { userId: string } }
@@ -14,6 +20,7 @@ export async function GET(
 
         return NextResponse.json(purchases);
     } catch (err) {
+        console.error(err);
         return NextResponse.json(err);
     }
 }

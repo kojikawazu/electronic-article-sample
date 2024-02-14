@@ -2,7 +2,17 @@ import { getDetailBook } from "@/app/lib/microcms/client";
 import Image from "next/image";
 import React from "react";
 
-const DetailBook = async ({ params }: { params: { id: string } }) => {
+/**
+ * 書籍詳細ページ
+ * @param param0 書籍ID
+ * @returns JSX
+ */
+const DetailBook = async ({
+    params
+}: {
+    params: { id: string }
+}) => {
+    // microCMS(ヘッドレスCMS)(特定の書籍データの取得)
     const book = await getDetailBook(params.id);
 
     return (

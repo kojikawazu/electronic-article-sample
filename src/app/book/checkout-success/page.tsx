@@ -1,11 +1,17 @@
 "use client";
+// useEffectはクライアントコンポーネント
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
+/**
+ * 購入成功ページ
+ * @returns JSX
+ */
 const PurchaseSuccess = () => {
     const [bookUrl, setBookUrl] = useState(null);
+    // セッションIDの取得
     const searchParams = useSearchParams();
     const sessionId = searchParams.get("session_id");
 
@@ -13,6 +19,7 @@ const PurchaseSuccess = () => {
         const fetchData = async () => {
             if (sessionId) {
                 try {
+                    // チェックアウト成功
                     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/checkout/success`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },

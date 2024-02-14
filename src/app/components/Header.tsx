@@ -1,3 +1,5 @@
+// getServerSessionはサーバーサイドコンポーネント
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,6 +7,10 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "../lib/next-auth/options";
 import { User } from "../types/types";
 
+/**
+ * ヘッダーコンポーネント
+ * @returns JSX
+ */
 const Header = async () => {
     const session = await getServerSession(nextAuthOptions);
     const user = session?.user as User;
@@ -36,14 +42,16 @@ const Header = async () => {
                         : ""
                     }
 
-                    <Link href={`/profile`}>
-                        <Image
-                            width={50}
-                            height={50}
-                            alt="profile_icon"
-                            src={user?.image || "/default_icon.png"}
-                        />
-                    </Link>
+                    {user &&
+                        <Link href={`/profile`}>
+                            <Image
+                                width={50}
+                                height={50}
+                                alt="profile_icon"
+                                src={user?.image || "/default_icon.png"}
+                            />
+                        </Link>
+                    }
                 </div>
             </nav>
         </header>
